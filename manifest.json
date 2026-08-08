@@ -1,0 +1,21 @@
+{
+  "name": "Health Wise Pharmacy",
+  "short_name": "Health Wise",
+  "description": "Billing and Sales Tracker for Pharmacy",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2E7D32",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/4320/4320445.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/4320/4320445.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
