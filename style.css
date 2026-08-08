@@ -1,0 +1,42 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #10b981 100%);
+  min-height: 100vh; padding: 15px; color: #333;
+}
+.container { max-width: 900px; margin: 0 auto; }
+.glass {
+  background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+  border-radius: 20px; padding: 20px; margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3);
+}
+header { text-align: center; color: white; background: rgba(139,92,246,0.3); }
+header h1 { font-size: 28px; margin-bottom: 5px; }
+.tagline { font-size: 14px; opacity: 0.9; }
+.contact { font-size: 13px; margin-top: 8px; }
+.contact a { color: white; text-decoration: underline; }
+h2 { color: #8b5cf6; margin-bottom: 15px; font-size: 20px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+input { width: 100%; padding: 14px; border: 2px solid #e9d5ff; border-radius: 12px; font-size: 16px; }
+input:focus { outline: none; border-color: #8b5cf6; }
+.btn-primary, .btn-success {
+  width: 100%; padding: 16px; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
+}
+.btn-primary { background: #8b5cf6; color: white; }
+.btn-primary:hover { background: #7c3aed; }
+.btn-success { background: #10b981; color: white; }
+.stat-card { text-align: center; }
+.stat-card h3 { font-size: 14px; color: #666; }
+.stat-card p { font-size: 22px; font-weight: bold; color: #8b5cf6; margin-top: 5px; }
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 500px; }
+th { background: #f3e8ff; color: #8b5cf6; padding: 12px; text-align: left; }
+td { padding: 12px; border-bottom: 1px solid #f3e8ff; }
+td button { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+
+@media (max-width: 600px) {
+  .grid, .grid-3 { grid-template-columns: 1fr; }
+  header h1 { font-size: 22px; }
+}
