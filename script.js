@@ -7,7 +7,7 @@ function addSale() {
   const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
   const due = total - paid;
 
-  if (!customer || !medicine) {
+  if (!customer ||!medicine) {
     alert("Please enter Customer Name and Medicine");
     return;
   }
@@ -30,6 +30,7 @@ function displaySales() {
   let totalDue = 0;
   let html = '';
 
+  // 1. Show each sale
   sales.forEach(s => {
     totalSales += s.total;
     totalCollected += s.paid;
@@ -37,7 +38,21 @@ function displaySales() {
     html += `<div><b>${s.customer}</b> - ${s.medicine}<br>Bill: Rs${s.total} | Paid: Rs${s.paid} | Due: Rs${s.due}<br><small>${s.date}</small></div>`;
   });
 
-  document.getElementById('salesList').innerHTML = html || '<p>No sales yet</p>';
+  // 2. NEW: Calculate Total Due per Customer
+  let customerDue = {};
+  sales.forEach(s => {
+    if (!customerDue[s.customer]) customerDue[s.customer] = 0;
+    customerDue[s.customer] += s.due;
+  });
+
+  let customerHtml = '<h3>Customer Total Due</h3>';
+  for (let name in customerDue) {
+    if (customerDue[name] > 0) {
+      customerHtml += `<div><b>${name}:</b> Rs${customerDue[name]} Due</div>`;
+    }
+  }
+
+  document.getElementById('salesList').innerHTML = html + '<hr>' + customerHtml || '<p>No sales yet</p>';
   document.getElementById('totalSales').innerText = totalSales;
   document.getElementById('totalCollected').innerText = totalCollected;
   document.getElementById('totalDue').innerText = totalDue;
