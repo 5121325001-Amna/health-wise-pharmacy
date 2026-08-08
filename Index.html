@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Wise Pharmacy - Billing</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#8b5cf6">
+</head>
+<body>
+  <div class="container">
+    <header class="glass">
+      <h1>💜 Health Wise Pharmacy</h1>
+      <p class="tagline">Wholesale Medicines & OT Equipment</p>
+      <p class="contact">📍 Near Shair Ahmed Marriage Hall, Opp Lal Haweli, College Road, RWP</p>
+      <p class="contact">📞 <a href="tel:03455374248">0345-5374248</a> | <a href="https://wa.me/923455374248">WhatsApp</a></p>
+    </header>
+
+    <section class="card glass">
+      <h2>Add New Sale</h2>
+      <div class="grid">
+        <input type="text" id="pharmacyName" placeholder="Pharmacy Name">
+        <input type="text" id="city" placeholder="City">
+        <input type="number" id="totalAmount" placeholder="Total Bill Amount Rs">
+        <input type="number" id="paidAmount" placeholder="Paid Amount Rs">
+      </div>
+      <button class="btn-primary" onclick="addSale()">+ Add Sale</button>
+    </section>
+
+    <section class="stats grid-3">
+      <div class="stat-card glass"><h3>Total Sales</h3><p>Rs <span id="totalSales">0</span></p></div>
+      <div class="stat-card glass"><h3>Collected</h3><p>Rs <span id="totalCollected">0</span></p></div>
+      <div class="stat-card glass"><h3>Total Due</h3><p>Rs <span id="totalDue">0</span></p></div>
+    </section>
+
+    <section class="card glass">
+      <h2>All Records</h2>
+      <div class="table-wrapper">
+        <table id="recordsTable">
+          <thead><tr><th>Pharmacy</th><th>City</th><th>Total</th><th>Paid</th><th>Due</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <button class="btn-success" onclick="exportData()">📥 Export Backup</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
