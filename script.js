@@ -1,45 +1,54 @@
-let sales = JSON.parse(localStorage.getItem('healthwise_sales')) || [];
+let sales = JSON.parse(localStorage.getItem('sales')) || [];
 
 function addSale() {
-  const name = document.getElementById('pharmacyName').value.trim();
-  const city = document.getElementById('city').value.trim();
-  const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+  const customer = document.getElementById('customerName').value;
+  const medicine = document.getElementById('medicine').value;
+  const total = parseFloat(document.getElementById('totalBill').value) || 0;
   const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
-  if(!name || !city) { alert('Please fill Pharmacy Name and City'); return; }
   const due = total - paid;
-  sales.push({name, city, total, paid, due});
-  localStorage.setItem('healthwise_sales', JSON.stringify(sales));
-  document.querySelectorAll('input').forEach(i => i.value = '');
-  render();
+
+  if (!customer || !medicine) {
+    alert("Please enter Customer Name and Medicine");
+    return;
+  }
+
+  const sale = { customer, medicine, total, paid, due, date: new Date().toLocaleDateString() };
+  sales.push(sale);
+  localStorage.setItem('sales', JSON.stringify(sales));
+  
+  document.getElementById('customerName').value = '';
+  document.getElementById('medicine').value = '';
+  document.getElementById('totalBill').value = '';
+  document.getElementById('paidAmount').value = '';
+  
+  displaySales();
 }
 
-function render() {
-  const tbody = document.querySelector('#recordsTable tbody');
-  tbody.innerHTML = '';
-  let ts=0, tc=0, td=0;
-  sales.forEach((s, i) => {
-    ts+=s.total; tc+=s.paid; td+=s.due;
-    tbody.innerHTML += `<tr>
-      <td>${s.name}</td><td>${s.city}</td><td>${s.total}</td>
-      <td>${s.paid}</td><td style="color:red;font-weight:bold">${s.due}</td>
-      <td><button onclick="deleteSale(${i})">X</button></td>
-    </tr>`;
+function displaySales() {
+  let totalSales = 0;
+  let totalCollected = 0;
+  let totalDue = 0;
+  let html = '';
+
+  sales.forEach(s => {
+    totalSales += s.total;
+    totalCollected += s.paid;
+    totalDue += s.due;
+    html += `<div><b>${s.customer}</b> - ${s.medicine}<br>Bill: Rs${s.total} | Paid: Rs${s.paid} | Due: Rs${s.due}<br><small>${s.date}</small></div>`;
   });
-  document.getElementById('totalSales').innerText = ts;
-  document.getElementById('totalCollected').innerText = tc;
-  document.getElementById('totalDue').innerText = td;
+
+  document.getElementById('salesList').innerHTML = html || '<p>No sales yet</p>';
+  document.getElementById('totalSales').innerText = totalSales;
+  document.getElementById('totalCollected').innerText = totalCollected;
+  document.getElementById('totalDue').innerText = totalDue;
 }
-function deleteSale(i) {
-  if(confirm('Delete this record?')) {
-    sales.splice(i,1);
-    localStorage.setItem('healthwise_sales', JSON.stringify(sales));
-    render();
-  }
-}
+
 function exportData() {
-  const blob = new Blob([JSON.stringify(sales, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sales));
   const a = document.createElement('a');
-  a.href = url; a.download = 'HealthWise_Backup.json'; a.click();
+  a.href = dataStr;
+  a.download = "health_wise_backup.json";
+  a.click();
 }
-render();
+
+window.onload = displaySales;
