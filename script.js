@@ -24,6 +24,20 @@ function addSale() {
   displaySales();
 }
 
+function markAsPaid(customerName) {
+  // Set all due of this customer to 0
+  sales = sales.map(s => {
+    if (s.customer === customerName && s.due > 0) {
+      s.paid = s.paid + s.due;
+      s.due = 0;
+    }
+    return s;
+  });
+  localStorage.setItem('sales', JSON.stringify(sales));
+  displaySales();
+  alert(customerName + " ka saara Due clear ho gaya! ✅");
+}
+
 function displaySales() {
   let totalSales = 0;
   let totalCollected = 0;
@@ -31,14 +45,14 @@ function displaySales() {
   let html = '';
 
   // 1. Show each sale
-  sales.forEach(s => {
+  sales.forEach((s, index) => {
     totalSales += s.total;
     totalCollected += s.paid;
     totalDue += s.due;
     html += `<div><b>${s.customer}</b> - ${s.medicine}<br>Bill: Rs${s.total} | Paid: Rs${s.paid} | Due: Rs${s.due}<br><small>${s.date}</small></div>`;
   });
 
-  // 2. NEW: Calculate Total Due per Customer
+  // 2. Calculate Total Due per Customer + Add "Paid" Button
   let customerDue = {};
   sales.forEach(s => {
     if (!customerDue[s.customer]) customerDue[s.customer] = 0;
@@ -48,7 +62,14 @@ function displaySales() {
   let customerHtml = '<h3>Customer Total Due</h3>';
   for (let name in customerDue) {
     if (customerDue[name] > 0) {
-      customerHtml += `<div><b>${name}:</b> Rs${customerDue[name]} Due</div>`;
+      customerHtml += `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0;">
+          <span><b>${name}:</b> Rs${customerDue[name]} Due</span>
+          <button onclick="markAsPaid('${name}')" style="width:auto; padding:8px 16px; font-size:14px; background:#D32F2F;">Paid ✅</button>
+        </div>
+      `;
+    } else {
+      customerHtml += `<div><b>${name}:</b> No Due ✅</div>`;
     }
   }
 
