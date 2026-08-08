@@ -1,4 +1,5 @@
 let sales = JSON.parse(localStorage.getItem('sales')) || [];
+let editIndex = -1;
 
 function addSale() {
   const customer = document.getElementById('customerName').value;
@@ -13,19 +14,47 @@ function addSale() {
   }
 
   const sale = { customer, medicine, total, paid, due, date: new Date().toLocaleDateString() };
-  sales.push(sale);
-  localStorage.setItem('sales', JSON.stringify(sales));
+
+  if (editIndex === -1) {
+    sales.push(sale); // Add new
+  } else {
+    sales[editIndex] = sale; // Update existing
+    editIndex = -1;
+    document.querySelector('button[onclick="addSale()"]').innerText = "+ Add Sale";
+  }
   
+  localStorage.setItem('sales', JSON.stringify(sales));
+  clearForm();
+  displaySales();
+}
+
+function clearForm() {
   document.getElementById('customerName').value = '';
   document.getElementById('medicine').value = '';
   document.getElementById('totalBill').value = '';
   document.getElementById('paidAmount').value = '';
-  
-  displaySales();
+}
+
+function editSale(index) {
+  const s = sales[index];
+  document.getElementById('customerName').value = s.customer;
+  document.getElementById('medicine').value = s.medicine;
+  document.getElementById('totalBill').value = s.total;
+  document.getElementById('paidAmount').value = s.paid;
+  editIndex = index;
+  document.querySelector('button[onclick="addSale()"]').innerText = "Update Sale ✏️";
+  window.scrollTo(0,0); // Go to top
+}
+
+function deleteSale(index) {
+  if (confirm("Are you sure you want to delete this sale?")) {
+    sales.splice(index, 1);
+    localStorage.setItem('sales', JSON.stringify(sales));
+    displaySales();
+  }
 }
 
 function markAsPaid(customerName) {
-  // Set all due of this customer to 0
   sales = sales.map(s => {
     if (s.customer === customerName && s.due > 0) {
       s.paid = s.paid + s.due;
@@ -44,15 +73,21 @@ function displaySales() {
   let totalDue = 0;
   let html = '';
 
-  // 1. Show each sale
   sales.forEach((s, index) => {
     totalSales += s.total;
     totalCollected += s.paid;
     totalDue += s.due;
-    html += `<div><b>${s.customer}</b> - ${s.medicine}<br>Bill: Rs${s.total} | Paid: Rs${s.paid} | Due: Rs${s.due}<br><small>${s.date}</small></div>`;
+    html += `
+      <div>
+        <b>${s.customer}</b> - ${s.medicine}<br>
+        Bill: Rs${s.total} | Paid: Rs${s.paid} | Due: Rs${s.due}<br>
+        <small>${s.date}</small><br>
+        <button onclick="editSale(${index})" style="width:48%; background:#FFA000; margin-right:4%;">Edit ✏️</button>
+        <button onclick="deleteSale(${index})" style="width:48%; background:#D32F2F;">Delete 🗑️</button>
+      </div>
+    `;
   });
 
-  // 2. Calculate Total Due per Customer + Add "Paid" Button
   let customerDue = {};
   sales.forEach(s => {
     if (!customerDue[s.customer]) customerDue[s.customer] = 0;
@@ -65,7 +100,7 @@ function displaySales() {
       customerHtml += `
         <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0;">
           <span><b>${name}:</b> Rs${customerDue[name]} Due</span>
-          <button onclick="markAsPaid('${name}')" style="width:auto; padding:8px 16px; font-size:14px; background:#D32F2F;">Paid ✅</button>
+          <button onclick="markAsPaid('${name}')" style="width:auto; padding:8px 16px; font-size:14px; background:#2E7D32;">Paid ✅</button>
         </div>
       `;
     } else {
